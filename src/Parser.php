@@ -43,17 +43,25 @@ class Parser
     {
         $tree = [];
         foreach ($lines as $line) {
-            // Split by dot or equal sign
-            $values = preg_split("/\.|=/", $line);
+            $vals = preg_split("/\.|=/", $line);
 
-            $len = count($values);
-            $arr = [$values[$len - 2] => $values[$len - 1]];
+            $this->insert($tree, $vals[0]);
+            $ref = &$tree[$vals[0]];
 
-            for ($i = 3; $i <= count($values); $i++) {
-                $arr = [$values[$len - $i] => $arr];
+            // Regular case. Like db.connection.type = remote
+            if (count($vals) > 2) {
+                for ($i = 1; $i < count($vals) - 2; $i++) {
+                    $this->insert($ref, $vals[$i]);
+                    $ref = &$ref[$vals[$i]];
+                }
+                $this->insert($ref, $vals[count($vals) - 2], $vals[count($vals) - 1]);
+            }
+            // One level nesting case. Like password = 123
+            else {
+                $this->insert($tree, $vals[0], $vals[1]);
             }
 
-            $tree = array_merge_recursive($tree, $arr);
+            unset($ref);
         }
 
         return $tree;
@@ -78,5 +86,24 @@ class Parser
         }
 
         return $filtered;
+    }
+
+    private function insert(&$where, $key, $value = null)
+    {
+        if (!empty($where)) {
+            if (is_string($where)) {
+                $where = [
+                    0 => $where,
+                    $key => $value
+                ];
+            }
+            if (is_array($where) && $value != NULL) {
+                $where[$key] = $value;
+            }
+
+            return;
+        }
+
+        $where[$key] = $value;
     }
 }
