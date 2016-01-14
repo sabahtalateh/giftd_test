@@ -1,0 +1,5 @@
+suites:
+    default:
+        namespace: ConfigReader
+        psr4_prefix: ConfigReader
+        src_path: src

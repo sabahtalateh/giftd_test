@@ -1,0 +1,19 @@
+{
+  "name": "sabahtalateh/config-parser",
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "Aleksandr Kravtsov",
+      "email": "sabahtalateh@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require-dev": {
+    "phpspec/phpspec": "^2.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "ConfigReader\\": "src"
+    }
+  }
+}
