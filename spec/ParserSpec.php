@@ -70,4 +70,33 @@ class ParserSpec extends ObjectBehavior
             ]
         ]);
     }
+
+    function it_passes_correct_config_2()
+    {
+        $this->beConstructedWith("
+            maintainer = Alexandr_Kravtsov
+            root = src
+
+            db.user = vasya
+            db.password = asd123
+            db.driver.type = mysql
+
+            app.mode = production
+        ");
+
+        $this->parse()->shouldReturn([
+            'maintainer' => 'Alexandr_Kravtsov',
+            'root' => 'src',
+            'db' => [
+                'user' => 'vasya',
+                'password' => 'asd123',
+                'driver' => [
+                    'type' => 'mysql'
+                ]
+            ],
+            'app' => [
+                'mode' => 'production',
+            ]
+        ]);
+    }
 }
